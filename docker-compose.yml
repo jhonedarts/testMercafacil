@@ -1,0 +1,37 @@
+version: '3'
+services:
+  mysql:
+    image: mysql:5.7.33
+    container_name: mysql_mf
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_DATABASE: mercafacil_app
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./.docker/mysql/dump:/docker-entrypoint-initdb.d
+      - mysql:/var/lib/mysql
+    networks:
+      - mercafacil_app
+  postgres:
+    image: postgres:9.6
+    container_name: postgres_mf
+    environment:
+      POSTGRES_DB: mercafacil_app
+      TZ: GMT
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./.docker/postgres/dump:/docker-entrypoint-initdb.d
+      - postgres:/var/lib/postgres
+    networks:
+      - mercafacil_app
+volumes:
+  mysql:
+  postgres:
+networks:
+  mercafacil_app:
+    driver: bridge
